@@ -14,10 +14,12 @@
   
 // Driver code 
 int main() { 
+	int contador = 0;
+	char *adios = "Adios";
+
 	int sockfd; 
 	char buffer[MAXLINE];
-	char message[MAXLINE];  
-	char *hello = "Hello from client"; 
+	char message[MAXLINE];   
 	struct sockaddr_in servaddr; 
   
 	// Creating socket file descriptor 
@@ -35,26 +37,42 @@ int main() {
       
 	int n, len; 
 
-    while(strcmp(message, "Adios")){
-		printf("Ingrese un mensaje: ");
-		gets(message);
-		fflush(stdin);
+    while(strcmp(buffer, "Adios")){
+		contador = 0;
+		while(contador < 4){
+			printf("Ingrese un mensaje: ");
+			gets(message);
+			fflush(stdin);
 
-		sendto(sockfd, (char *)message, strlen(message), 
-			MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
-			sizeof(servaddr)); 
+			sendto(sockfd, (char *)message, strlen(message), 
+				MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
+				sizeof(servaddr)); 
 
-		printf("Message sent.\n"); 
+			printf("Message sent.\n"); 
 
+			n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
+				MSG_WAITALL, (struct sockaddr *) &servaddr, 
+				&len); 
+
+			buffer[n] = '\0';
+
+			printf("Server : %s\n", buffer);
+			contador++;
+		}
+		printf("Es correcto?\n");
 		n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
-			MSG_WAITALL, (struct sockaddr *) &servaddr, 
-			&len); 
+				MSG_WAITALL, (struct sockaddr *) &servaddr, 
+				&len); 
 
 		buffer[n] = '\0';
 
-		printf("Server : %s\n", buffer);  
+		printf("Server: %s\n", buffer);  
 		
 	}
+
+	sendto(sockfd, (char *)adios, strlen(adios), 
+	MSG_CONFIRM, (const struct sockaddr *) &servaddr, 
+	sizeof(servaddr)); 
   
 	close(sockfd); 
 	return 0; 
