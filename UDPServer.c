@@ -20,7 +20,7 @@ int main() {
  
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char *hello = "Hello from server"; 
+	char *hello = "Hello"; 
 	struct sockaddr_in servaddr, cliaddr; 
       
 	// Creating socket file descriptor 
@@ -77,7 +77,7 @@ int main() {
 			{
 			       for (j=0; j < 4-i ;j++) 
 			       {
-				  if (numeros[j] > numeros[j+1])//Condicion mayor-menor
+				  if (numeros[j] > numeros[j+1])
 				  {
 				    temp=numeros[j];
 				    numeros[j]=numeros[j+1];
