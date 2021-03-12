@@ -14,13 +14,16 @@
 int main() {
 	int numeros[4];
 	int contador = 0;
-	int operaciones = 0;
-	char *adios = "Adios";
+	int operaciones = 0; 
 	int i, j, temp;
+
+	char *adios = "Adios";
+	char *add = "Add";
+	char *mal = "mal";
  
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char *hello = "Hello"; 
+	
 	struct sockaddr_in servaddr, cliaddr; 
       
 	// Creating socket file descriptor 
@@ -60,13 +63,11 @@ int main() {
 
 		numeros[contador] = atoi(buffer);
 
-		printf("Client : %d\n", numeros[contador]); 
+		printf("Cliente : %d\n", numeros[contador]); 
 
-		sendto(sockfd, (const char *)hello, strlen(hello),  
+		sendto(sockfd, (const char *)add, strlen(add),  
 			MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 			len); 
-
-		printf("Receive.\n");
 
 		contador++;
 		printf("Contador: %d\n",contador);
@@ -77,7 +78,7 @@ int main() {
 			{
 			       for (j=0; j < 4-i ;j++) 
 			       {
-				  if (numeros[j] > numeros[j+1])
+				  if (numeros[j] < numeros[j+1])
 				  {
 				    temp=numeros[j];
 				    numeros[j]=numeros[j+1];
@@ -97,10 +98,18 @@ int main() {
 				sendto(sockfd, (const char *)adios, strlen(adios),  
 				MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 				len); 
+
+				n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
+				MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
+				&len); 
+
+				buffer[n] = '\0'; 
+
+				
 			}
 			else{
 				contador = 0;
-				sendto(sockfd, (const char *)hello, strlen(hello),  
+				sendto(sockfd, (const char *)mal, strlen(mal),  
 				MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 				len); 
 			}
